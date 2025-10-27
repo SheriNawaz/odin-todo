@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<script defer src="main.js"></script></head>
+<body>
+    <div id="projects" class="w3-sidebar w3-light-grey w3-bar-block" style="width:25%">
+    </div>
+    <div style="margin-left:25%">
+        <div class="w3-container w3-teal">
+            <h1>Todo List</h1>
+        </div>
+        <div class="w3-container" id="task-container">
+
+        </div>
+    </div>
+
+    <div id="overlay">
+        <form>
+        <h2>Add New Task</h2>
+
+        <label for="taskName">Task Name</label>
+        <input type="text" id="taskName" name="taskName" placeholder="Enter task name..." required>
+
+        <label for="taskDesc">Description</label>
+        <textarea id="taskDesc" name="taskDesc" rows="4" placeholder="Enter task description..." required></textarea>
+
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate" name="dueDate" required>
+
+        <div style="text-align: center;">
+            <button type="submit" class="submit-btn">Add Task</button>
+            <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
+        </div>
+        </form>
+    </div>
+</body>
+</html>
