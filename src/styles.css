@@ -1,3 +1,19 @@
-body {
-    background-color: black;
+/* ...existing code... */
+
+#projects {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* center contents horizontally */
+    padding: 1rem;
+    box-sizing: border-box;
+    height: 100vh; /* ensure sidebar fills viewport height so bottom alignment works */
+}
+
+.add-project-btn {
+    margin-top: auto; /* push button to bottom */
+    margin-bottom: 1rem; /* small space from bottom edge */
+    padding: 0.5rem 1rem;
+    width: calc(100% - 2rem); /* optional: make button not full width */
+    max-width: 180px;
+    text-align: center;
 }
