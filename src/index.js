@@ -10,21 +10,18 @@ class Task {
     }
 }
 
-const p1 = new Project("T", "Project 1");
-const p2 = new Project("T", "Project 2");
-const p3 = new Project("T", "Project 3");
+const defaultProject = new Project([], "Default");
 let projects = [];
-projects.push(p1);
-projects.push(p2);
-projects.push(p3);
+projects.push(defaultProject);
 
-let tasks = [];
+let currentProject = defaultProject;
+
 
 function displayTasks() {
     const tasksContainer = document.getElementById("task-container");
     tasksContainer.innerHTML = "";
 
-    tasks.forEach(task => {
+    currentProject.tasks.forEach(task => {
         const newDiv = document.createElement("div");
         newDiv.classList.add("todo-item");
 
@@ -85,9 +82,8 @@ document.querySelector('form').addEventListener('submit', function(e) {
     const dueDate = document.getElementById('dueDate').value;
     
     const newTask = new Task(taskName, taskDesc, new Date(dueDate), false);
-    
-    tasks.push(newTask);
-    
+    currentProject.tasks.push(newTask);
+    console.log(currentProject);
     displayTasks();
     
     document.getElementById('taskName').value = '';
@@ -106,32 +102,46 @@ function closeForm() {
     document.getElementById("overlay").style.display = "none";
 }
 
-function displayProjects(){
+function displayProjects() {
     const projectsContainer = document.getElementById("projects");
     projectsContainer.innerHTML = "";
+
     const title = document.createElement("h2");
     title.innerHTML = "Projects";
     title.classList.add("w3-bar-item");
     projectsContainer.appendChild(title);
-    projects.forEach(project => {
+
+    projects.forEach((project) => {
         const ptag = document.createElement("a");
         ptag.innerHTML = project.name;
-        ptag.classList.add("w3-bar-item");
-        ptag.classList.add("w3-button");
+        ptag.classList.add("w3-bar-item", "w3-button");
+
+        if (project === currentProject) {
+            ptag.classList.add("w3-teal");
+        }
+
+        ptag.addEventListener("click", () => {
+            currentProject = project;
+            displayProjects();
+            displayTasks(); 
+            console.log(currentProject);
+        });
+
         projectsContainer.appendChild(ptag);
     });
+
     const addBtn = document.createElement("button");
-    addBtn.classList.add("add-button")
+    addBtn.classList.add("add-button");
     addBtn.innerHTML = "Add Project";
     addBtn.addEventListener("click", addProject);
     projectsContainer.appendChild(addBtn);
-    
 }
+
 
 function addProject(){
     let projectName = prompt("Enter Name For Project: ")
     if (projectName != null && projectName.trim() != ""){
-        let newProject = new Project("T", projectName);
+        let newProject = new Project([], projectName);
         projects.push(newProject);
         displayProjects();
     }

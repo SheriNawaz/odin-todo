@@ -1,6 +1,6 @@
 export class Project {
-    constructor(todo, name) {
-        this.todo = todo;
+    constructor(tasks, name) {
+        this.tasks = tasks;
         this.name = name;
     }
 }
