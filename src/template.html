@@ -13,9 +13,34 @@
         <div class="w3-container w3-teal">
             <h1>Todo List</h1>
         </div>
-        <div class="w3-container">
-            Todo
+        <div class="w3-container" id="task-container">
+
         </div>
     </div>
+
+    <div id="overlay">
+        <form>
+        <h2>Add New Task</h2>
+
+        <label for="taskName">Task Name</label>
+        <input type="text" id="taskName" name="taskName" placeholder="Enter task name..." required>
+
+        <label for="taskDesc">Description</label>
+        <textarea id="taskDesc" name="taskDesc" rows="4" placeholder="Enter task description..." required></textarea>
+
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate" name="dueDate" required>
+
+        <div style="text-align: center;">
+            <button type="submit" class="submit-btn">Add Task</button>
+            <button type="button" class="cancel-btn" onclick="closeForm()">Cancel</button>
+        </div>
+        </form>
+    </div>
+    <script>
+        function closeForm() {
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
 </body>
 </html>

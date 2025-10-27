@@ -1,5 +1,5 @@
-class Project {
-    constructor(todo, name){
+export class Project {
+    constructor(todo, name) {
         this.todo = todo;
         this.name = name;
     }
