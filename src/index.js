@@ -10,11 +10,48 @@ class Task {
     }
 }
 
-const defaultProject = new Project([], "Default");
-let projects = [];
-projects.push(defaultProject);
+function saveToLocalStorage() {
+    const projectsData = projects.map(project => ({
+        name: project.name,
+        tasks: project.tasks.map(task => ({
+            title: task.title,
+            description: task.description,
+            dueDate: task.dueDate.toISOString(),
+            isComplete: task.isComplete
+        }))
+    }));
+    localStorage.setItem('todoProjects', JSON.stringify(projectsData));
+}
 
-let currentProject = defaultProject;
+function loadFromLocalStorage() {
+    const savedData = localStorage.getItem('todoProjects');
+    if (savedData) {
+        const projectsData = JSON.parse(savedData);
+        projects = projectsData.map(projectData => {
+            const tasks = projectData.tasks.map(taskData => 
+                new Task(
+                    taskData.title,
+                    taskData.description,
+                    new Date(taskData.dueDate),
+                    taskData.isComplete
+                )
+            );
+            return new Project(tasks, projectData.name);
+        });
+        currentProject = projects[0];
+    }
+}
+
+let projects = [];
+let currentProject = null; // Add this line
+loadFromLocalStorage();
+
+if (projects.length === 0) {
+    const defaultProject = new Project([], "Default");
+    projects.push(defaultProject);
+    currentProject = defaultProject;
+}
+
 let editTaskIndex = null; // track if editing a task
 
 function displayTasks() {
@@ -27,6 +64,12 @@ function displayTasks() {
 
         const title = document.createElement("h3");
         title.textContent = task.title;
+
+        // Apply completed state styling on load
+        if (task.isComplete) {
+            newDiv.style.opacity = "0.6";
+            title.style.textDecoration = "line-through";
+        }
 
         const description = document.createElement("p");
         description.innerHTML = `<strong>Description:</strong> ${task.description}`;
@@ -46,11 +89,10 @@ function displayTasks() {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = "status";
-        checkbox.checked = task.isComplete;
+        checkbox.checked = task.isComplete; // This line is correct, keep it
 
         checkbox.addEventListener("change", () => {
             task.isComplete = checkbox.checked;
-            console.log(`Task "${task.title}" marked as ${task.isComplete ? "complete" : "incomplete"}.`);
             if (task.isComplete) {
                 newDiv.style.opacity = "0.6";
                 title.style.textDecoration = "line-through";
@@ -58,6 +100,7 @@ function displayTasks() {
                 newDiv.style.opacity = "1";
                 title.style.textDecoration = "none";
             }
+            saveToLocalStorage(); // Add this line to save immediately when checkbox changes
         });
 
         const label = document.createElement("label");
@@ -91,8 +134,6 @@ function displayTasks() {
         newDiv.appendChild(deleteBtn);
         newDiv.appendChild(editBtn);
 
-  
-
         tasksContainer.appendChild(newDiv);
     });
 
@@ -102,6 +143,8 @@ function displayTasks() {
     addBtn.innerHTML = "Add Task";
     addBtn.onclick = openAddForm;
     tasksContainer.appendChild(addBtn);
+
+    saveToLocalStorage();
 }
 
 function deleteTask(index) {
@@ -109,6 +152,7 @@ function deleteTask(index) {
     if (!confirmDelete) return;
     currentProject.tasks.splice(index, 1);
     displayTasks();
+    saveToLocalStorage();
 }
 
 // ----- FORM HANDLING -----
@@ -135,6 +179,7 @@ document.querySelector('form').addEventListener('submit', function (e) {
 
     displayTasks();
     closeForm();
+    saveToLocalStorage();
 
     // Reset form
     document.getElementById('taskName').value = '';
@@ -231,6 +276,7 @@ function deleteProject(index) {
 
     displayProjects();
     displayTasks();
+    saveToLocalStorage();
 }
 
 function addProject() {
@@ -239,9 +285,9 @@ function addProject() {
         let newProject = new Project([], projectName);
         projects.push(newProject);
         displayProjects();
+        saveToLocalStorage();
     }
 }
 
 displayProjects();
 displayTasks();
-document.getElementById("cancelBtn").addEventListener("click", closeForm);
